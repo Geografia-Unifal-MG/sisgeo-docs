@@ -1,0 +1,58 @@
+version: '3.2'
+services:
+    nginx-geoserver:
+      image: terrabrasilis/nginx-geoserver:v06
+      hostname: nginx.geoserver
+      ports:
+        - "80"
+        - "443"
+      networks: 
+        - proxy
+      volumes:        
+        ### configs        
+        - /server/sisgeo/data/nginx/geoserver/conf.d:/etc/nginx/conf.d
+        ### logs         
+        - /server/sisgeo/data/nginx/geoserver/log:/var/log/nginx        
+      tty: true
+      depends_on:
+        - geoserver-master  
+      deploy:
+        replicas: 1
+        update_config:
+          parallelism: 2
+          delay: 10s
+        restart_policy:
+          condition: on-failure    
+
+    geoserver-master:
+      image: terrabrasilis/geoserver:v03
+      hostname: geoserver.master
+      ports:
+        - "10080:8080"
+      networks: 
+        - proxy
+      volumes: 
+        - /server/sisgeo/data/geoserver:/data/geoserver
+        - /server/sisgeo/data/geoserver/web.xml:/usr/local/tomcat/webapps/geoserver/WEB-INF/web.xml
+      tty: true  
+      environment:
+        - "CATALINA_OPTS=-server \
+              -Djava.awt.headless=true \
+              -Dfile.encoding=UTF-8 \
+              -Xms1024m -Xmx3072m -Xss512m -XX:MaxMetaspaceSize=3072m \
+              -XX:+DisableExplicitGC -XX:+UseParallelOldGC \
+              -XX:SoftRefLRUPolicyMSPerMB=36000 -XX:+HeapDumpOnOutOfMemoryError"
+      deploy:
+        replicas: 1
+        update_config:
+          parallelism: 2
+          delay: 10s
+        placement:        
+          constraints:
+            - node.role==manager
+        restart_policy:
+          condition: on-failure 
+
+networks: 
+  proxy:
+    external: true
