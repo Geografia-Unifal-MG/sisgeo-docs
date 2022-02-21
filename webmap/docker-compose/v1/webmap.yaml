@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  webmap:
+    image: geografiaunifal/sisgeo:v1.2.8
+    hostname: webmap
+    networks:
+      - proxy
+    ports:
+      - "10001:80"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+networks:
+  proxy:
+    external: true
