@@ -8,8 +8,8 @@ services:
       networks:
         - proxy
       volumes:
-        - /server/sisgeo/data/geoserver/data:/var/local/geoserver
-        - /server/sisgeo/data/geoserver/web.xml:/usr/local/geoserver/WEB-INF/web.xml
+        - /server/sisgeo/data/sisgeo-geoserver/data:/var/local/geoserver
+        - /server/sisgeo/data/sisgeo-geoserver/web.xml:/usr/local/geoserver/WEB-INF/web.xml
       environment:
         GEOSERVER_LOG_LOCATION: /var/local/geoserver/logs/geoserver.log
         CATALINA_OPTS: >-
