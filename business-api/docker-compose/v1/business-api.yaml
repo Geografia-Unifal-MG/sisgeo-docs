@@ -3,7 +3,7 @@ services:
 
   ### Business API as a Service
   business-api:
-    image: geografiaunifal/sisgeo-business-api:v1.2
+    image: geografiaunifal/sisgeo-business-api:v1.3
     hostname: "business.api"
     networks:
       - proxy
